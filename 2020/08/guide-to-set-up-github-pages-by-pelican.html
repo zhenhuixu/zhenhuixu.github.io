@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Guide to set up Github Pages by Pelican</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="/2020/08/guide-to-set-up-github-pages-by-pelican.html" rel="canonical" />
+  <!-- Feed -->
+
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+    <!-- CSS specified by the user -->
+
+
+    <link href="/assets/css/myblog.css" type="text/css" rel="stylesheet" />
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="This blog describes how I set up my first Github pages by Pelican.">
+
+    <meta name="author" content="Zhenhui Xu">
+
+    <meta name="tags" content="pelican">
+    <meta name="tags" content="publishing">
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Zhenhui Blog"/>
+<meta property="og:title" content="Guide to set up Github Pages by Pelican"/>
+<meta property="og:description" content="This blog describes how I set up my first Github pages by Pelican."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="/2020/08/guide-to-set-up-github-pages-by-pelican.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-08-18 20:34:00+05:30"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="/author/zhenhui-xu">
+<meta property="article:section" content="Python"/>
+<meta property="article:tag" content="pelican"/>
+<meta property="article:tag" content="publishing"/>
+<meta property="og:image" content="/theme/images/post-bg.jpg">
+
+<!-- Twitter Card -->
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Guide to set up Github Pages by Pelican",
+  "headline": "Guide to set up Github Pages by Pelican",
+  "datePublished": "2020-08-18 20:34:00+05:30",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Zhenhui Xu",
+    "url": "/author/zhenhui-xu"
+  },
+  "image": "/theme/images/post-bg.jpg",
+  "url": "/2020/08/guide-to-set-up-github-pages-by-pelican.html",
+  "description": "This blog describes how I set up my first Github pages by Pelican."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="/pages/guide-to-set-up-github-pages-by-pelican/">Guide to set up Github Pages by Pelican</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" >
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Guide to set up Github Pages by Pelican</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="/author/zhenhui-xu">Zhenhui Xu</a>
+            | <time datetime="18 8月 2020">18 8月 2020</time>
+        </span>
+        <!-- TODO : Modified check -->
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <p>This <a href="https://pages.github.com/">Github Page</a> is built for display further projects. I use <a href="https://blog.getpelican.com/">Pelican</a> to simplify the process of creating html files. The following codes is referred to the tutorial on <a href="https://pages.github.com/">Github Pages</a> and <a href="https://docs.getpelican.com/en/stable/quickstart.html">Pelican Doc</a>. </p>
+<ul>
+<li>Create a github repository and name it after by zhenhuixu.github.io. This repository will contain the html files that Pelican contains.</li>
+<li>Install Pelican via pip.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pip install pelican</span>
+</pre></div>
+
+
+<ul>
+<li>Clone the github repository I have just created.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">git clone https://github.com/zhenhuixu/zhenhuixu.github.io.git</span>
+</pre></div>
+
+
+<ul>
+<li>Run Pelican quickstart command to initialize. Set URL prefix to http://zhenhuixu.github.io and uploaded  mechanisms to Github Pages.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pelican-quickstart</span>
+</pre></div>
+
+
+<ul>
+<li>Convert the text file into HTML via the pelican command.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pelican ./content -s pelicanconf.py</span>
+</pre></div>
+
+
+<ul>
+<li>Serve the output at http://localhost:8000. Check whether the html file is created correctly.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pelican --listen</span>
+</pre></div>
+
+
+<ul>
+<li>Push the changes in the repository(output files).</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">git add .</span>
+<span class="err">git commit -m &quot;This is the first homework&quot;</span>
+<span class="err">git push -u origin master</span>
+</pre></div>
+
+
+<ul>
+<li>Check the outcome on the Github Pages.</li>
+</ul>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Guide to set up Github Pages by Pelican&amp;url=/2020/08/guide-to-set-up-github-pages-by-pelican.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2020/08/guide-to-set-up-github-pages-by-pelican.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2020/08/guide-to-set-up-github-pages-by-pelican.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="/tag/pelican">pelican</a><a href="/tag/publishing">publishing</a>                </aside>
+
+                <div class="clear"></div>
+
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3546274-12"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3546274-12', { 'anonymize_ip': true });
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'attilademo';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
