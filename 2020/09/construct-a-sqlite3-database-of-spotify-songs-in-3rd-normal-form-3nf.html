@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Construct a SQLite3 Database of Spotify Songs in 3rd normal form (3NF)</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="/2020/09/construct-a-sqlite3-database-of-spotify-songs-in-3rd-normal-form-3nf.html" rel="canonical" />
+  <!-- Feed -->
+
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+    <!-- CSS specified by the user -->
+
+
+    <link href="/assets/css/myblog.css" type="text/css" rel="stylesheet" />
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="This blog introduces the definition of 3NF, and shows the steps of constructing a SQLite3 database of spotify songs. An example SQL...">
+
+    <meta name="author" content="Zhenhui Xu">
+
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Zhenhui Blog"/>
+<meta property="og:title" content="Construct a SQLite3 Database of Spotify Songs in 3rd normal form (3NF)"/>
+<meta property="og:description" content="This blog introduces the definition of 3NF, and shows the steps of constructing a SQLite3 database of spotify songs. An example SQL..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="/2020/09/construct-a-sqlite3-database-of-spotify-songs-in-3rd-normal-form-3nf.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-09-26 15:44:00+05:30"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="/author/zhenhui-xu">
+<meta property="article:section" content="sqlite"/>
+<meta property="og:image" content="/assets/images/duke2.jpg">
+
+<!-- Twitter Card -->
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Construct a SQLite3 Database of Spotify Songs in 3rd normal form (3NF)",
+  "headline": "Construct a SQLite3 Database of Spotify Songs in 3rd normal form (3NF)",
+  "datePublished": "2020-09-26 15:44:00+05:30",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Zhenhui Xu",
+    "url": "/author/zhenhui-xu"
+  },
+  "image": "/assets/images/duke2.jpg",
+  "url": "/2020/09/construct-a-sqlite3-database-of-spotify-songs-in-3rd-normal-form-3nf.html",
+  "description": "This blog introduces the definition of 3NF, and shows the steps of constructing a SQLite3 database of spotify songs. An example SQL..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="/pages/guide-to-set-up-github-pages-by-pelican/">Guide to set up Github Pages by Pelican</a></li>
+              <li role="presentation"><a href="/pages/solutions-to-3-problems-from-the-euler-project/">Solutions to 3 problems from the Euler Project</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" class="has-cover">
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Construct a SQLite3 Database of Spotify Songs in 3rd normal form (3NF)</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="/author/zhenhui-xu">Zhenhui Xu</a>
+            | <time datetime="26 9月 2020">26 9月 2020</time>
+        </span>
+        <!-- TODO : Modified check -->
+            <div class="post-cover cover" style="background-image: url('/assets/images/duke2.jpg')">
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <h3>Database Normalization</h3>
+<p>Database normalization is performed for two main reasons - reduce redundancy and prevent inconsistencies on insert/update/delete.</p>
+<h4>First Normal Form (1NF)</h4>
+<ol>
+<li>Table has a primary key (unique, not null column that identifies each row)</li>
+<li>No repeating groups of columns</li>
+<li>Each cell contains a single value</li>
+</ol>
+<h4>Second Normal Form (2NF)</h4>
+<ol>
+<li>All columns in each row depend fully on candidate keys.</li>
+</ol>
+<h4>Third Normal Form (3NF)</h4>
+<ol>
+<li>No transitive dependencies between non-candidate columns.</li>
+</ol>
+<h3>Construct a SQLite Database of Spotify Songs Data in 3NF</h3>
+<p>The Spotify Songs dataset contains 32833 observations and 23 columns, including information of playlists, artists, albums and scores of each track.</p>
+<p>First, let's get the access to the dataset</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Obviously, this dataset has a primary key: <code>track_id</code> and every cell only has a single value. The first normal form has already been satisfied.</p>
+<p>However, the <code>track_album_name</code> only depends on <code>track_album_id</code> and <code>play_list_name</code> only depends on <code>playlist_id</code>, which violates the 2NF. To satisfy the second normal form, let's create seperate tables containing variables fully dependent on albums and playlist.</p>
+<div class="highlight"><pre><span></span><span class="n">album</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s2">&quot;track_album_id&quot;</span><span class="p">,</span><span class="s2">&quot;track_album_name&quot;</span><span class="p">,</span><span class="s2">&quot;track_album_release_date&quot;</span><span class="p">]]</span>
+<span class="n">album</span> <span class="o">=</span> <span class="n">album</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;track_album_id&#39;</span><span class="p">)</span>
+<span class="n">playlist</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s2">&quot;playlist_id&quot;</span><span class="p">,</span><span class="s2">&quot;playlist_name&quot;</span><span class="p">,</span><span class="s2">&quot;playlist_genre&quot;</span><span class="p">,</span><span class="s2">&quot;playlist_subgenre&quot;</span><span class="p">]]</span>
+<span class="n">playlist</span> <span class="o">=</span> <span class="n">playlist</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;playlist_id&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>There are many different ways to connect python and sqlite3. Here, I will use my favorite method: <code>Ipython sql magic</code></p>
+<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">load_ext</span> <span class="n">sql</span>
+</pre></div>
+
+
+<p>The following command create a new sqlite3 database called <code>spotify.db</code>.</p>
+<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">sql</span> <span class="n">sqlite</span><span class="p">:</span><span class="o">///</span><span class="n">data</span><span class="o">/</span><span class="n">spotify</span><span class="o">.</span><span class="n">db</span>
+</pre></div>
+
+
+<p>Next, we convert a pandas DataFrame to a table</p>
+<div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span> 
+
+<span class="n">PERSIST</span> <span class="n">track</span>
+<span class="n">PERSIST</span> <span class="n">playlist</span>
+<span class="n">PERSIST</span> <span class="n">album</span>
+<span class="n">PERSIST</span> <span class="n">scores</span>
+</pre></div>
+
+
+<h3>Example Query of retrieving data</h3>
+<p>One of the most important manipulation of tables is <code>join</code>. There are many different ways to join tables. Here, I will introduce three different methods:</p>
+<ul>
+<li>INNER JOIN</li>
+<li>INTERSECT</li>
+<li>EQUIJOIN</li>
+</ul>
+<p>First, let's apply <code>INNER JOIN</code> to find the names of all playlists that contains instrumentals. </p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="k">distinct</span> <span class="n">playlist_name</span>
+<span class="k">from</span> <span class="p">(</span><span class="n">scores</span> <span class="n">s</span> <span class="k">inner</span> <span class="k">join</span>
+<span class="n">track</span> <span class="n">t</span> <span class="k">on</span> <span class="n">s</span><span class="p">.</span><span class="n">track_id</span><span class="o">=</span><span class="n">t</span><span class="p">.</span><span class="n">track_id</span><span class="p">)</span> <span class="k">inner</span> <span class="k">join</span>
+<span class="n">playlist</span> <span class="n">p</span> <span class="k">on</span> <span class="n">p</span><span class="p">.</span><span class="n">playlist_id</span><span class="o">=</span><span class="n">t</span><span class="p">.</span><span class="n">playlist_id</span>
+<span class="k">where</span> <span class="n">s</span><span class="p">.</span><span class="n">instrumentalness</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+
+
+<p>If you want to join <code>track</code> table and <code>playlist</code> table, you can also use <code>EQUIJOIN</code>.</p>
+<div class="highlight"><pre><span></span><span class="err">select distinct playlist_name</span>
+<span class="err">from playlist, track</span>
+<span class="err">where playlist.playlist_id = track.playlist_id</span>
+</pre></div>
+
+
+<p>Or use <code>INTERSECT</code></p>
+<div class="highlight"><pre><span></span><span class="err">select playlist_name</span>
+<span class="err">from playlist</span>
+<span class="err">where palylist_id IN (select distinct playlist_id</span>
+<span class="err">from playlist</span>
+<span class="err">INTERSECT</span>
+<span class="err">select distinct playlist_id</span>
+<span class="err">from track)</span>
+</pre></div>
+
+
+<h4>References</h4>
+<ol>
+<li>https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md</li>
+<li>https://github.com/cliburn/bios-823-2020</li>
+</ol>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Construct a SQLite3 Database of Spotify Songs in 3rd normal form (3NF)&amp;url=/2020/09/construct-a-sqlite3-database-of-spotify-songs-in-3rd-normal-form-3nf.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2020/09/construct-a-sqlite3-database-of-spotify-songs-in-3rd-normal-form-3nf.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2020/09/construct-a-sqlite3-database-of-spotify-songs-in-3rd-normal-form-3nf.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+
+                <div class="clear"></div>
+
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3546274-12"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3546274-12', { 'anonymize_ip': true });
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'attilademo';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
