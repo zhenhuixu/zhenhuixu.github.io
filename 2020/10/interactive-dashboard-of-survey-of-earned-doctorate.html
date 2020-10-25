@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Interactive Dashboard of Survey of Earned Doctorate</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="/2020/10/interactive-dashboard-of-survey-of-earned-doctorate.html" rel="canonical" />
+  <!-- Feed -->
+
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+    <!-- CSS specified by the user -->
+
+
+    <link href="/assets/css/myblog.css" type="text/css" rel="stylesheet" />
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="This blog will walk you through how to build an interactive dashboard simply by python, explore the Doctorate Recipient dataset, and...">
+
+    <meta name="author" content="Zhenhui Xu">
+
+    <meta name="tags" content="Python">
+    <meta name="tags" content="dash">
+    <meta name="tags" content="deploy">
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Zhenhui Blog"/>
+<meta property="og:title" content="Interactive Dashboard of Survey of Earned Doctorate"/>
+<meta property="og:description" content="This blog will walk you through how to build an interactive dashboard simply by python, explore the Doctorate Recipient dataset, and..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="/2020/10/interactive-dashboard-of-survey-of-earned-doctorate.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-10-24 20:19:00+05:30"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="/author/zhenhui-xu">
+<meta property="article:section" content="misc"/>
+<meta property="article:tag" content="Python"/>
+<meta property="article:tag" content="dash"/>
+<meta property="article:tag" content="deploy"/>
+<meta property="og:image" content="/assets/images/duke2.jpg">
+
+<!-- Twitter Card -->
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Interactive Dashboard of Survey of Earned Doctorate",
+  "headline": "Interactive Dashboard of Survey of Earned Doctorate",
+  "datePublished": "2020-10-24 20:19:00+05:30",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Zhenhui Xu",
+    "url": "/author/zhenhui-xu"
+  },
+  "image": "/assets/images/duke2.jpg",
+  "url": "/2020/10/interactive-dashboard-of-survey-of-earned-doctorate.html",
+  "description": "This blog will walk you through how to build an interactive dashboard simply by python, explore the Doctorate Recipient dataset, and..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="/pages/guide-to-set-up-github-pages-by-pelican/">Guide to set up Github Pages by Pelican</a></li>
+              <li role="presentation"><a href="/pages/solutions-to-3-problems-from-the-euler-project/">Solutions to 3 problems from the Euler Project</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" class="has-cover">
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Interactive Dashboard of Survey of Earned Doctorate</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="/author/zhenhui-xu">Zhenhui Xu</a>
+            | <time datetime="24 10月 2020">24 10月 2020</time>
+        </span>
+        <!-- TODO : Modified check -->
+            <div class="post-cover cover" style="background-image: url('/assets/images/duke2.jpg')">
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <p>The url of the dashboard is http://zhenhuixu.pythonanywhere.com/</p>
+<h3>Deployment of the Dashboard</h3>
+<ul>
+<li>Sign up to <a href="https://www.pythonanywhere.com/">pythonanywhere</a> by creating a Beginner account.</li>
+<li>On the top bar go to Web &gt; Add a new web app:</li>
+<li>Click on <strong>Next</strong>.</li>
+<li>Select <strong>Flask</strong> as the Python Web framework.</li>
+<li>
+<p>Choose the Python version you used to develop the app. (Here I use <code>python 3.7</code>)</p>
+</li>
+<li>
+<p>Leave the path by default and <strong>click Next</strong>.</p>
+</li>
+<li>
+<p>Note this link is what everyone can use to access your web app</p>
+</li>
+</ul>
+<p><img alt="image-20201024203831605" src="assets/images/image-20201024203831605.png"></p>
+<ul>
+<li>On the top bar go to <code>Files</code>, in the <code>Directories</code> sidebar, click on <code>mysite/</code> (or the directory you specified in the previous step), you can replace the <code>flask_app.py</code> by the files of  your own project. Just to make sure your main dash app file is located in <code>mysite/</code> folder instead of subfolders that you create.</li>
+</ul>
+<p><img alt="image-20201024204747877" src="assets/images/image-20201024204747877.png"></p>
+<ul>
+<li>On the top bar, go to <code>Consoles</code>. Here, you'll find the Bash console, which is the usual terminal that you'll find in your computer. </li>
+<li>Note: you need to specify the version of python you select when creating the web app. An example of installing the <code>dash</code> package is:</li>
+</ul>
+<div class="highlight"><pre><span></span>pip3.7 install --user dash
+</pre></div>
+
+
+<ul>
+<li>Go to <code>Web</code> icon on the top bar and in the Code section open the WSGI configuration file.</li>
+</ul>
+<p><img src="assets/images/image-20201024205648748.png" alt="image-20201024205648748" style="zoom: 67%;" /></p>
+<ul>
+<li>Replace the <code>flask_app</code> to the name of your main dash file, such as <code>app</code>.</li>
+<li>Go back to the <code>Web</code> page and reload the files. Now, your app is running 24/7 on the server and everyone can access the web app through the link!</li>
+</ul>
+<h4>References</h4>
+<ol>
+<li>https://towardsdatascience.com/the-easiest-way-to-deploy-your-dash-app-for-free-f92c575bb69e</li>
+<li>https://dash.plotly.com/</li>
+</ol>
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Interactive Dashboard of Survey of Earned Doctorate&amp;url=/2020/10/interactive-dashboard-of-survey-of-earned-doctorate.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2020/10/interactive-dashboard-of-survey-of-earned-doctorate.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2020/10/interactive-dashboard-of-survey-of-earned-doctorate.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="/tag/python">Python</a><a href="/tag/dash">dash</a><a href="/tag/deploy">deploy</a>                </aside>
+
+                <div class="clear"></div>
+
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3546274-12"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3546274-12', { 'anonymize_ip': true });
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'attilademo';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
