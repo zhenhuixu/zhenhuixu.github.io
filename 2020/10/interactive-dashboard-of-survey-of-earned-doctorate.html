@@ -140,6 +140,37 @@
         <div class="inner">
             <section class="post-content">
                 <p>The url of the dashboard is http://zhenhuixu.pythonanywhere.com/</p>
+<h3>Dataset--Survey of Doctorate Recipients in the US</h3>
+<p><a href="https://ncses.nsf.gov/pubs/nsf19301/data">The dataset</a> includes PhDs awarded in the US through 1987 to 2017. It presents detailed data on the demographic characteristics, educational history, source of financial support, and postgraduation plans of doctorate recepients. Here, we focus on two research questions</p>
+<ul>
+<li>Is there any difference in number of female and male doctorate recipients over time?</li>
+<li>Is there any difference in number of doctorate recipients by major of field of study over time?</li>
+</ul>
+<h3>Visualizations</h3>
+<p>The number of science and engineering PhDs in the US has been increasing until now while the number of non-science and engineering PhDs is relatively constant after 1990s. The number of scientific and engineering PhDs is more than 40k in 2017 while the number of non-scientific and engineering PhDs is around 14k in the same year. We can conclude that there is large difference in these two broad majors and the trend over time is significantly different.</p>
+<p><div id="642f9277-a09b-407f-8cfe-08b15b45e06f"></div></p>
+<p>Overall, the number of male PhDs awarded is larger than the number of female PhDs awarded in every year recorded. However, the difference in female and male is shrinking every 5 years. The difference in sex largely depends on subjects. In mathematical science, computater sciences and engineering areas, the number of male doctorate recipients is larger than female while in education psychological sciences the female PhDs dominates the overall population. </p>
+<p><div id="dc55eba1-54dc-42d1-95cb-54447be5ef41"></div></p>
+<h3>Rendering Plotly figures on Pelican</h3>
+<p>Rendering plotly figures on your Github Pages can make your website more interactive and show more information of the data without redundancy. Here, I introduce a very simple method to render plotly figures on Pelican static website. The Pelican plugin can  be found <a href="https://github.com/ran404/pelican-plotly">here</a>.</p>
+<ul>
+<li>Save your plotly figures as a json file by <code>write_json</code> function imported from plotly.io module.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">plotly.io</span> <span class="kn">import</span> <span class="n">write_json</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+<span class="n">write_json</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;fig.json&quot;</span><span class="p">)</span> 
+</pre></div>
+
+
+<ul>
+<li>Add the plugin path to your PLUGINS setting in the pelicanconf.py file.</li>
+<li>Add the plugin as a sub module to your plugin directory.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">submodule</span> <span class="n">add</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ran404</span><span class="o">/</span><span class="n">pelican</span><span class="o">-</span><span class="n">plotly</span><span class="o">.</span><span class="n">git</span> <span class="n">plugins</span><span class="o">/</span><span class="n">pelican</span><span class="o">-</span><span class="n">plotly</span>
+</pre></div>
+
+
 <h3>Deployment of the Dashboard</h3>
 <ul>
 <li>Sign up to <a href="https://www.pythonanywhere.com/">pythonanywhere</a> by creating a Beginner account.</li>
@@ -181,7 +212,26 @@
 <ol>
 <li>https://towardsdatascience.com/the-easiest-way-to-deploy-your-dash-app-for-free-f92c575bb69e</li>
 <li>https://dash.plotly.com/</li>
+<li>https://ncses.nsf.gov/pubs/nsf19301/data</li>
+<li>https://github.com/ran404/pelican-plotly</li>
 </ol>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+function getPlotlyJSON(div, url) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        var figure = JSON.parse(request.responseText);
+        Plotly.plot(div, figure.data, figure.layout);
+      }
+    };
+    request.send();
+}
+getPlotlyJSON("642f9277-a09b-407f-8cfe-08b15b45e06f", "/assets/images/fig.json");
+getPlotlyJSON("dc55eba1-54dc-42d1-95cb-54447be5ef41", "/assets/images/fig2.json");
+</script>
+
             </section>
 
             <section class="post-info">
