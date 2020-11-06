@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Zhenhui's Blog - deploy</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Zhenhui's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="/pages/guide-to-set-up-github-pages-by-pelican.html">Guide to set up Github Pages by Pelican</a></li>
+                    <li><a href="/pages/solutions-to-3-problems-from-the-euler-project.html">Solutions to 3 problems from the Euler Project</a></li>
+                    <li><a href="/category/misc.html">misc</a></li>
+                    <li><a href="/category/python.html">Python</a></li>
+                    <li><a href="/category/sqlite.html">sqlite</a></li>
+                    <li><a href="/category/visualizations.html">Visualizations</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/interactive-dashboard-of-survey-of-earned-doctorate.html">Interactive Dashboard of Survey of Earned Doctorate</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2020-10-24T20:19:00+02:00">
+                Published: 周六 24 十月 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/zhenhui-xu.html">Zhenhui Xu</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+<p>tags: <a href="/tag/python.html">Python</a> <a href="/tag/dash.html">dash</a> <a href="/tag/deploy.html">deploy</a> </p>
+</footer><!-- /.post-info --><p>The url of the dashboard is http://zhenhuixu.pythonanywhere.com/</p>
+<h3>Dataset--Survey of Doctorate Recipients in the US</h3>
+<p><a href="https://ncses.nsf.gov/pubs/nsf19301/data">The dataset</a> includes PhDs awarded in the US through 1987 to 2017. It presents detailed data on the demographic characteristics, educational history, source of financial support, and postgraduation plans of doctorate recepients. Here, we focus on two research questions</p>
+<ul>
+<li>Is there any difference in number of female and male doctorate recipients over time?</li>
+<li>Is there any difference in number of doctorate recipients by major of field of study over time?</li>
+</ul>
+<h3>Visualizations</h3>
+<p>The number of science and engineering PhDs in the US has been increasing until now while the number of non-science and engineering PhDs is relatively constant after 1990s. The number of scientific and engineering PhDs is more than 40k in 2017 while the number of non-scientific and engineering PhDs is around 14k in the same year. We can conclude that there is large difference in these two broad majors and the trend over time is significantly different.</p>
+<p>[plotly] /assets/images/fig.json [/plotly]</p>
+<p>Overall, the number of male PhDs awarded is larger than the number of female PhDs awarded in every year recorded. However, the difference in female and male is shrinking every 5 years. The difference in sex largely depends on subjects. In mathematical science, computater sciences and engineering areas, the number of male doctorate recipients is larger than female while in education psychological sciences the female PhDs dominates the overall population. </p>
+<p>[plotly] /assets/images/fig2.json [/plotly]</p>
+<h3>Rendering Plotly figures on Pelican</h3>
+<p>Rendering plotly figures on your Github Pages can make your website more interactive and show more information of the data without redundancy. Here, I introduce a very simple method to render plotly figures on Pelican static website. The Pelican plugin can  be found <a href="https://github.com/ran404/pelican-plotly">here</a>.</p>
+<ul>
+<li>Save your plotly figures as a json file by <code>write_json</code> function imported from plotly.io module.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">plotly.io</span> <span class="kn">import</span> <span class="n">write_json</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+<span class="n">write_json</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s2">&quot;fig.json&quot;</span><span class="p">)</span> 
+</pre></div>
+
+
+<ul>
+<li>Add the plugin path to your PLUGINS setting in the pelicanconf.py file.</li>
+<li>Add the plugin as a sub module to your plugin directory.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">submodule</span> <span class="n">add</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ran404</span><span class="o">/</span><span class="n">pelican</span><span class="o">-</span><span class="n">plotly</span><span class="o">.</span><span class="n">git</span> <span class="n">plugins</span><span class="o">/</span><span class="n">pelican</span><span class="o">-</span><span class="n">plotly</span>
+</pre></div>
+
+
+<h3>Deployment of the Dashboard</h3>
+<ul>
+<li>Sign up to <a href="https://www.pythonanywhere.com/">pythonanywhere</a> by creating a Beginner account.</li>
+<li>On the top bar go to Web &gt; Add a new web app:</li>
+<li>Click on <strong>Next</strong>.</li>
+<li>Select <strong>Flask</strong> as the Python Web framework.</li>
+<li>
+<p>Choose the Python version you used to develop the app. (Here I use <code>python 3.7</code>)</p>
+</li>
+<li>
+<p>Leave the path by default and <strong>click Next</strong>.</p>
+</li>
+<li>
+<p>Note this link is what everyone can use to access your web app</p>
+</li>
+</ul>
+<p><img alt="image-20201024203831605" src="assets/images/image-20201024203831605.png"></p>
+<ul>
+<li>On the top bar go to <code>Files</code>, in the <code>Directories</code> sidebar, click on <code>mysite/</code> (or the directory you specified in the previous step), you can replace the <code>flask_app.py</code> by the files of  your own project. Just to make sure your main dash app file is located in <code>mysite/</code> folder instead of subfolders that you create.</li>
+</ul>
+<p><img alt="image-20201024204747877" src="assets/images/image-20201024204747877.png"></p>
+<ul>
+<li>On the top bar, go to <code>Consoles</code>. Here, you'll find the Bash console, which is the usual terminal that you'll find in your computer. </li>
+<li>Note: you need to specify the version of python you select when creating the web app. An example of installing the <code>dash</code> package is:</li>
+</ul>
+<div class="highlight"><pre><span></span>pip3.7 install --user dash
+</pre></div>
+
+
+<ul>
+<li>Go to <code>Web</code> icon on the top bar and in the Code section open the WSGI configuration file.</li>
+</ul>
+<p><img src="assets/images/image-20201024205648748.png" alt="image-20201024205648748" style="zoom: 67%;" /></p>
+<ul>
+<li>Replace the <code>flask_app</code> to the name of your main dash file, such as <code>app</code>.</li>
+<li>Go back to the <code>Web</code> page and reload the files. Now, your app is running 24/7 on the server and everyone can access the web app through the link!</li>
+</ul>
+<h4>References</h4>
+<ol>
+<li>https://towardsdatascience.com/the-easiest-way-to-deploy-your-dash-app-for-free-f92c575bb69e</li>
+<li>https://dash.plotly.com/</li>
+<li>https://ncses.nsf.gov/pubs/nsf19301/data</li>
+<li>https://github.com/ran404/pelican-plotly</li>
+</ol>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://github.com/zhenhuixu">github</a></li>
+                            <li><a href="https://www.linkedin.com/in/zhenhui-xu-315a19195/">LinkedIn</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

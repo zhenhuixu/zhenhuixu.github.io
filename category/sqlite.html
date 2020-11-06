@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Zhenhui's Blog - sqlite</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Zhenhui's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="/pages/guide-to-set-up-github-pages-by-pelican.html">Guide to set up Github Pages by Pelican</a></li>
+                    <li><a href="/pages/solutions-to-3-problems-from-the-euler-project.html">Solutions to 3 problems from the Euler Project</a></li>
+                    <li><a href="/category/misc.html">misc</a></li>
+                    <li><a href="/category/python.html">Python</a></li>
+                    <li class="active"><a href="/category/sqlite.html">sqlite</a></li>
+                    <li><a href="/category/visualizations.html">Visualizations</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+
+            <aside id="featured" class="body">
+                <article>
+                    <h1 class="entry-title"><a href="/construct-a-sqlite3-database-of-spotify-songs-in-3rd-normal-form-3nf.html">Construct a SQLite3 Database of Spotify Songs in 3rd normal form (3NF)</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2020-09-26T15:44:00+02:00">
+                Published: 周六 26 九月 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/zhenhui-xu.html">Zhenhui Xu</a>
+        </address>
+<p>In <a href="/category/sqlite.html">sqlite</a>.</p>
+
+</footer><!-- /.post-info --><h3>Database Normalization</h3>
+<p>Database normalization is performed for two main reasons - reduce redundancy and prevent inconsistencies on insert/update/delete.</p>
+<h4>First Normal Form (1NF)</h4>
+<ol>
+<li>Table has a primary key (unique, not null column that identifies each row)</li>
+<li>No repeating groups of columns</li>
+<li>Each cell contains a single value</li>
+</ol>
+<h4>Second Normal Form (2NF)</h4>
+<ol>
+<li>All columns in each row depend fully on candidate keys.</li>
+</ol>
+<h4>Third Normal Form (3NF)</h4>
+<ol>
+<li>No transitive dependencies between non-candidate columns.</li>
+</ol>
+<h3>Construct a SQLite Database of Spotify Songs Data in 3NF</h3>
+<p>The Spotify Songs dataset contains 32833 observations and 23 columns, including information of playlists, artists, albums and scores of each track.</p>
+<p>First, let's get the access to the dataset</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</pre></div>
+
+
+<p>Obviously, this dataset has a primary key: <code>track_id</code> and every cell only has a single value. The first normal form has already been satisfied.</p>
+<p>However, the <code>track_album_name</code> only depends on <code>track_album_id</code> and <code>play_list_name</code> only depends on <code>playlist_id</code>, which violates the 2NF. To satisfy the second normal form, let's create seperate tables containing variables fully dependent on albums and playlist.</p>
+<div class="highlight"><pre><span></span><span class="n">album</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s2">&quot;track_album_id&quot;</span><span class="p">,</span><span class="s2">&quot;track_album_name&quot;</span><span class="p">,</span><span class="s2">&quot;track_album_release_date&quot;</span><span class="p">]]</span>
+<span class="n">album</span> <span class="o">=</span> <span class="n">album</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;track_album_id&#39;</span><span class="p">)</span>
+<span class="n">playlist</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,[</span><span class="s2">&quot;playlist_id&quot;</span><span class="p">,</span><span class="s2">&quot;playlist_name&quot;</span><span class="p">,</span><span class="s2">&quot;playlist_genre&quot;</span><span class="p">,</span><span class="s2">&quot;playlist_subgenre&quot;</span><span class="p">]]</span>
+<span class="n">playlist</span> <span class="o">=</span> <span class="n">playlist</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;playlist_id&#39;</span><span class="p">)</span>
+</pre></div>
+
+
+<p>There are many different ways to connect python and sqlite3. Here, I will use my favorite method: <code>Ipython sql magic</code></p>
+<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">load_ext</span> <span class="n">sql</span>
+</pre></div>
+
+
+<p>The following command create a new sqlite3 database called <code>spotify.db</code>.</p>
+<div class="highlight"><pre><span></span><span class="o">%</span><span class="n">sql</span> <span class="n">sqlite</span><span class="p">:</span><span class="o">///</span><span class="n">data</span><span class="o">/</span><span class="n">spotify</span><span class="o">.</span><span class="n">db</span>
+</pre></div>
+
+
+<p>Next, we convert a pandas DataFrame to a table</p>
+<div class="highlight"><pre><span></span><span class="o">%%</span><span class="n">sql</span> 
+
+<span class="n">PERSIST</span> <span class="n">track</span>
+<span class="n">PERSIST</span> <span class="n">playlist</span>
+<span class="n">PERSIST</span> <span class="n">album</span>
+<span class="n">PERSIST</span> <span class="n">scores</span>
+</pre></div>
+
+
+<h3>Example Query of retrieving data</h3>
+<p>One of the most important manipulation of tables is <code>join</code>. There are many different ways to join tables. Here, I will introduce three different methods:</p>
+<ul>
+<li>INNER JOIN</li>
+<li>INTERSECT</li>
+<li>EQUIJOIN</li>
+</ul>
+<p>First, let's apply <code>INNER JOIN</code> to find the names of all playlists that contains instrumentals. </p>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="k">distinct</span> <span class="n">playlist_name</span>
+<span class="k">from</span> <span class="p">(</span><span class="n">scores</span> <span class="n">s</span> <span class="k">inner</span> <span class="k">join</span>
+<span class="n">track</span> <span class="n">t</span> <span class="k">on</span> <span class="n">s</span><span class="p">.</span><span class="n">track_id</span><span class="o">=</span><span class="n">t</span><span class="p">.</span><span class="n">track_id</span><span class="p">)</span> <span class="k">inner</span> <span class="k">join</span>
+<span class="n">playlist</span> <span class="n">p</span> <span class="k">on</span> <span class="n">p</span><span class="p">.</span><span class="n">playlist_id</span><span class="o">=</span><span class="n">t</span><span class="p">.</span><span class="n">playlist_id</span>
+<span class="k">where</span> <span class="n">s</span><span class="p">.</span><span class="n">instrumentalness</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+</pre></div>
+
+
+<p>If you want to join <code>track</code> table and <code>playlist</code> table, you can also use <code>EQUIJOIN</code>.</p>
+<div class="highlight"><pre><span></span><span class="err">select distinct playlist_name</span>
+<span class="err">from playlist, track</span>
+<span class="err">where playlist.playlist_id = track.playlist_id</span>
+</pre></div>
+
+
+<p>Or use <code>INTERSECT</code></p>
+<div class="highlight"><pre><span></span><span class="err">select playlist_name</span>
+<span class="err">from playlist</span>
+<span class="err">where palylist_id IN (select distinct playlist_id</span>
+<span class="err">from playlist</span>
+<span class="err">INTERSECT</span>
+<span class="err">select distinct playlist_id</span>
+<span class="err">from track)</span>
+</pre></div>
+
+
+<h4>References</h4>
+<ol>
+<li>https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md</li>
+<li>https://github.com/cliburn/bios-823-2020</li>
+</ol>                </article>
+            </aside><!-- /#featured -->
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://github.com/zhenhuixu">github</a></li>
+                            <li><a href="https://www.linkedin.com/in/zhenhui-xu-315a19195/">LinkedIn</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Zhenhui's Blog - Categories</title>
+        <title>Guide to set up Github Pages by Pelican</title>
         <link rel="stylesheet" href="/theme/css/main.css" />
 </head>
 
@@ -10,7 +10,7 @@
         <header id="banner" class="body">
                 <h1><a href="/">Zhenhui's Blog </a></h1>
                 <nav><ul>
-                    <li><a href="/pages/guide-to-set-up-github-pages-by-pelican.html">Guide to set up Github Pages by Pelican</a></li>
+                    <li class="active"><a href="/pages/guide-to-set-up-github-pages-by-pelican.html">Guide to set up Github Pages by Pelican</a></li>
                     <li><a href="/pages/solutions-to-3-problems-from-the-euler-project.html">Solutions to 3 problems from the Euler Project</a></li>
                     <li><a href="/category/misc.html">misc</a></li>
                     <li><a href="/category/python.html">Python</a></li>
@@ -18,13 +18,59 @@
                     <li><a href="/category/visualizations.html">Visualizations</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
-    <h1>Categories on Zhenhui's Blog</h1>
-    <ul>
-        <li><a href="/category/misc.html">misc</a> (3)</li>
-        <li><a href="/category/python.html">Python</a> (2)</li>
-        <li><a href="/category/sqlite.html">sqlite</a> (1)</li>
-        <li><a href="/category/visualizations.html">Visualizations</a> (1)</li>
-    </ul>
+<section id="content" class="body">
+    <h1 class="entry-title">Guide to set up Github Pages by Pelican</h1>
+    
+    <p>This <a href="https://pages.github.com/">Github Page</a> is built for display further projects. I use <a href="https://blog.getpelican.com/">Pelican</a> to simplify the process of creating html files. The following codes is referred to the tutorial on <a href="https://pages.github.com/">Github Pages</a> and <a href="https://docs.getpelican.com/en/stable/quickstart.html">Pelican Doc</a>. </p>
+<ul>
+<li>Create a github repository and name it after by zhenhuixu.github.io. This repository will contain the html files that Pelican contains.</li>
+<li>Install Pelican via pip.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pip install pelican</span>
+</pre></div>
+
+
+<ul>
+<li>Clone the github repository I have just created.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">git clone https://github.com/zhenhuixu/zhenhuixu.github.io.git</span>
+</pre></div>
+
+
+<ul>
+<li>Run Pelican quickstart command to initialize. Set URL prefix to http://zhenhuixu.github.io and uploaded  mechanisms to Github Pages.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pelican-quickstart</span>
+</pre></div>
+
+
+<ul>
+<li>Convert the text file into HTML via the pelican command.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pelican ./content -s pelicanconf.py</span>
+</pre></div>
+
+
+<ul>
+<li>Serve the output at http://localhost:8000. Check whether the html file is created correctly.</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">pelican --listen</span>
+</pre></div>
+
+
+<ul>
+<li>Push the changes in the repository(output files).</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="err">git add .</span>
+<span class="err">git commit -m &quot;This is the first homework&quot;</span>
+<span class="err">git push -u origin master</span>
+</pre></div>
+
+
+<ul>
+<li>Check the outcome on the Github Pages.</li>
+</ul>
+</section>
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <title>Explore the oldest creature in starwars</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">Zhenhui's Blog </a></h1>
+                <nav><ul>
+                    <li><a href="/pages/guide-to-set-up-github-pages-by-pelican.html">Guide to set up Github Pages by Pelican</a></li>
+                    <li><a href="/pages/solutions-to-3-problems-from-the-euler-project.html">Solutions to 3 problems from the Euler Project</a></li>
+                    <li class="active"><a href="/category/misc.html">misc</a></li>
+                    <li><a href="/category/python.html">Python</a></li>
+                    <li><a href="/category/sqlite.html">sqlite</a></li>
+                    <li><a href="/category/visualizations.html">Visualizations</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/explore-the-oldest-creature-in-starwars.html" rel="bookmark"
+           title="Permalink to Explore the oldest creature in starwars">Explore the oldest creature in starwars</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2020-10-17T16:54:00+02:00">
+                Published: 周六 17 十月 2020
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/zhenhui-xu.html">Zhenhui Xu</a>
+        </address>
+<p>In <a href="/category/misc.html">misc</a>.</p>
+<p>tags: <a href="/tag/python.html">Python</a> <a href="/tag/json.html">json</a> <a href="/tag/requests.html">requests</a> </p>
+</footer><!-- /.post-info -->      <h3>Starwars dataset</h3>
+<p>The starwars dataset contains the characters and other information in the films. The data is stored in json schema. You can download these files by <code>requests</code> library in python. To download data from rest APIs, you need to append the base url and endpoint paths. In this case, the base url is https://swapi.dev/api.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;https://swapi.dev/api&#39;</span>
+<span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;people/</span><span class="si">{</span><span class="n">x</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">82</span><span class="p">)]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span><span class="n">url</span><span class="p">))</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</pre></div>
+
+
+<h3>The oldest person in starwars</h3>
+<p>Now all the information regarding characters in starwars are stored in a list named after <code>data</code>. First, let's transform the list into a pandas dataframe.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+
+
+<p>The birth year of characters in starwars is in the form of <code>XXX(numeric year)</code> + <code>BBY/ABY</code>. BBY is the abbreviation of <code>Before Battle of Yavin</code> and ABY is the abbreviation of <code>After Battle of Yavin</code>. Thus, if we want to find the oldest person, we need to find the largest number + BBY.</p>
+<div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">birth_year</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;(^[0-9.]+)&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;BBY&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">birth_year</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">&#39;(BBY$)&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">BBY</span> <span class="o">==</span> <span class="s1">&#39;BBY&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">idxmax</span><span class="p">(),:]</span>
+</pre></div>
+
+
+<p><img alt="" src="assets\images\dat.png"></p>
+<p>Here, the numeric part of birth year is extracted from the string and the largest number within people born before Battle of Yavin is found. The oldest person is <a href="https://starwars.fandom.com/wiki/Yoda">Yoda</a>. Our next goal is to find out which films this character is involved.</p>
+<h3>Get the nested API</h3>
+<p>As we can see from the output above, the films are nested in the form of urls. We need to extract the nested urls to figure out the titles of the films. The following function downloads all the nested APIs regarding films:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_nested</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+    <span class="n">urls</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;films&#39;</span><span class="p">]</span>
+    <span class="n">films</span> <span class="o">=</span> <span class="p">[</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">]</span>
+    <span class="n">d</span><span class="p">[</span><span class="s1">&#39;films&#39;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">films</span>
+    <span class="k">return</span> <span class="n">d</span>
+<span class="n">data_nested</span> <span class="o">=</span> <span class="n">get_nested</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">19</span><span class="p">])</span>
+<span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_nested</span><span class="p">[</span><span class="s1">&#39;films&#39;</span><span class="p">]]</span>
+</pre></div>
+
+
+<p><img alt="" src="assets\images\image-20201017183250685.png"></p>
+<p>Yoda shows up in four films in the series of starwars. </p>
+<h4>References</h4>
+<p>[1] https://swapi.dev/documentation</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="blogroll">
+                        <h2>links</h2>
+                        <ul>
+                            <li><a href="http://getpelican.com/">Pelican</a></li>
+                            <li><a href="http://python.org/">Python.org</a></li>
+                            <li><a href="http://jinja.pocoo.org/">Jinja2</a></li>
+                            <li><a href="#">You can modify those links in your config file</a></li>
+                        </ul>
+                </div><!-- /.blogroll -->
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+
+                            <li><a href="https://github.com/zhenhuixu">github</a></li>
+                            <li><a href="https://www.linkedin.com/in/zhenhui-xu-315a19195/">LinkedIn</a></li>
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="http://getpelican.com/">Pelican</a>, which takes great advantage of <a href="http://python.org">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="http://coding.smashingmagazine.com/2009/08/04/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
