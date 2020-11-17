@@ -176,17 +176,17 @@
 <li>Note: the admission time was also transformed to avoid data users identifying patients.</li>
 <li>Extracting the laboratory test results from the table <code>LABEVENTS</code> table on the first dat of admission for each observation, such as white blood count and blood urea nitrogen test.</li>
 </ul>
-<p><img alt="image-20201116203522270" src="./assets/images/image-20201116203522270.png"></p>
+<p><img alt="image-20201116203522270" src="assets/images/image-20201116203522270.png"></p>
 <h3>Target Variables</h3>
 <p>This figure shows a comparison of the target variable in the raw data and processed data. We combined patients discharged to home, home health care and other locations which would consume very limited resources together and combined all other facilities, such as short term hospitals and long term hospitals, to one group which would consume a large amount of resources. </p>
-<p><div id="9b6cd7ac-5d86-4188-8149-cec6e7be290e"></div></p>
+<p><div id="ac8aeca6-d2bf-414d-b497-69ae63b739fe"></div></p>
 <h3>Numerical Varibles</h3>
 <p>All the numerical variables were imputed by <strong>single imputation</strong>. We attempted to apply iterative imputation but this algorithm couldn't converge on this dataset. The variables with &gt;50% missingness were removed. This figure demonstrates the correlation between target variables and some selected numerical variables. Most of the numerical variables are not highly linearly correlated with the outcome variables.</p>
-<p><img alt="correlation" src="./assets/images/correlation.png"></p>
+<p><img alt="correlation" src="assets/images/correlation.png"></p>
 <h3>Categorical Variables</h3>
 <p>We applied <strong>one-hot-encoding</strong> to the categorical variables and removed the levels with less frequent occurrences. For example, we only kept 9 diagnoses among more than 10,000 different diagnosis since most of these diagnosis were consisted of less than 1% of the sample.</p>
 <p>We used cross tables to observe the association between these variables and the target variables. For example, the patients admitted urgently are more likely to die in hospital compared to admitted electively which is consistent to our knowledge. New born are almost impossible to be discharged to skilled nursing facility.</p>
-<p><img alt="crosstab" src="./assets/images/crosstab.png"></p>
+<p><img alt="crosstab" src="assets/images/crosstab.png"></p>
 <h2>Development of Predictive Modeling</h2>
 <p>Dummy classifier and logistic regression were applied as baseline method and four different machine learning algorithms were applied to attempt to improve predictive ability. The performance of these methods are shown in this table.</p>
 <table>
@@ -315,7 +315,7 @@
 <p>Although testing accuracy decreased 1% if we controlled overfitting by gamma, the training accuracy decreased for 8% which indicated the overfitting problem was solved to some degree. We also tried AdaBoosting but the gradient boosting beated the AdaBoosting in terms of testing accuracy.</p>
 <h2>Dashboard Design</h2>
 <p>After building the predictive model, we decided to show the overall process of development of the model and prediction of the model to a dashboard. Here, we use <a href="https://dash.plotly.com/">dash</a> package to make our dashboard.</p>
-<p><img alt="image-20201117113951829" src="./assets/images/image-20201117113951829.png"></p>
+<p><img alt="image-20201117113951829" src="assets/images/image-20201117113951829.png"></p>
 <p>There are five parts of this dashboard:</p>
 <ul>
 <li>Home page: links to dataset, github repository and github pages</li>
@@ -457,7 +457,7 @@
 
 <h3>Calendar Page</h3>
 <p>The calendar page is deigned for users who have no knowledge of machine learning algorithms. The prediction is based on the data collected at the admission stage (or the first day of admission). Care managers can see the predicted discharge locations directly in terms of time series. For example, on 2101 Januray, three patients are expected to be discharged to skilled nursing facilities.</p>
-<p><img alt="calendar" src="./assets/images/calendar.gif"></p>
+<p><img alt="calendar" src="assets/images/calendar.gif"></p>
 <h3>Deployment to Google Cloud Platform</h3>
 <p>Our final step is to deploy the dashboard to google cloud platform so that everyone can see the results of our model. We only need three steps before closing our project!</p>
 <h4>Step 1: Set up your Google Cloud Platform Project</h4>
@@ -537,7 +537,7 @@ function getPlotlyJSON(div, url) {
     };
     request.send();
 }
-getPlotlyJSON("9b6cd7ac-5d86-4188-8149-cec6e7be290e", "./assets/images/target.json");
+getPlotlyJSON("ac8aeca6-d2bf-414d-b497-69ae63b739fe", "assets/images/target.json");
 </script>
 
             </section>
