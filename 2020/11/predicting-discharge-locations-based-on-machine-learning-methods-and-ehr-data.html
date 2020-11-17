@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+
+  <title>Predicting Discharge Locations based on Machine Learning Methods and EHR data</title>
+
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="origin" />
+  <meta name="generator" content="Pelican" />
+<link href="/2020/11/predicting-discharge-locations-based-on-machine-learning-methods-and-ehr-data.html" rel="canonical" />
+  <!-- Feed -->
+
+  <link href="/theme/css/style.css" type="text/css" rel="stylesheet" />
+
+  <!-- Code highlight color scheme -->
+      <link href="/theme/css/code_blocks/github.css" rel="stylesheet">
+
+    <!-- CSS specified by the user -->
+
+
+    <link href="/assets/css/myblog.css" type="text/css" rel="stylesheet" />
+
+  <!-- Custom fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Montserrat:400,300' rel='stylesheet' type='text/css' />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css" />
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+
+
+    <meta name="description" content="This blog will walk you through the process of predicting discharge locations, including exploratory data analysis, development of...">
+
+    <meta name="author" content="Zhenhui Xu">
+
+    <meta name="tags" content="EHR">
+    <meta name="tags" content="classification">
+    <meta name="tags" content="dash">
+
+
+
+
+<!-- Open Graph -->
+<meta property="og:site_name" content="Zhenhui Blog"/>
+<meta property="og:title" content="Predicting Discharge Locations based on Machine Learning Methods and EHR data"/>
+<meta property="og:description" content="This blog will walk you through the process of predicting discharge locations, including exploratory data analysis, development of..."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:url" content="/2020/11/predicting-discharge-locations-based-on-machine-learning-methods-and-ehr-data.html"/>
+<meta property="og:type" content="article"/>
+<meta property="article:published_time" content="2020-11-16 10:34:00+05:30"/>
+<meta property="article:modified_time" content=""/>
+<meta property="article:author" content="/author/zhenhui-xu">
+<meta property="article:section" content="misc"/>
+<meta property="article:tag" content="EHR"/>
+<meta property="article:tag" content="classification"/>
+<meta property="article:tag" content="dash"/>
+<meta property="og:image" content="/assets/images/duke2.jpg">
+
+<!-- Twitter Card -->
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "name": "Predicting Discharge Locations based on Machine Learning Methods and EHR data",
+  "headline": "Predicting Discharge Locations based on Machine Learning Methods and EHR data",
+  "datePublished": "2020-11-16 10:34:00+05:30",
+  "dateModified": "",
+  "author": {
+    "@type": "Person",
+    "name": "Zhenhui Xu",
+    "url": "/author/zhenhui-xu"
+  },
+  "image": "/assets/images/duke2.jpg",
+  "url": "/2020/11/predicting-discharge-locations-based-on-machine-learning-methods-and-ehr-data.html",
+  "description": "This blog will walk you through the process of predicting discharge locations, including exploratory data analysis, development of..."
+}
+</script>
+</head>
+<!-- TODO : Body class -->
+<body class="home-template">
+
+<nav id="menu">
+  <a class="close-button">Close</a>
+  <div class="nav-wrapper">
+    <p class="nav-label">Menu</p>
+    <ul>
+
+              <li role="presentation"><a href="/pages/guide-to-set-up-github-pages-by-pelican/">Guide to set up Github Pages by Pelican</a></li>
+              <li role="presentation"><a href="/pages/solutions-to-3-problems-from-the-euler-project/">Solutions to 3 problems from the Euler Project</a></li>
+
+    </ul>
+  </div>
+</nav>
+    <!-- Progressbar -->
+    <div class="progress-container">
+        <span class="progress-bar"></span>
+    </div>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header id="post-header" class="has-cover">
+      <div class="inner">
+        <nav id="navigation">
+            <span id="home-button" class="nav-button">
+                <a class="home-button" href="/" title="Home"><i class="ic ic-arrow-left"></i> Home</a>
+            </span>
+          <span id="menu-button" class="nav-button">
+            <a class="menu-button"><i class="ic ic-menu"></i> Menu</a>
+          </span>
+        </nav>
+        <h1 class="post-title">Predicting Discharge Locations based on Machine Learning Methods and EHR data</h1>
+        <!-- TODO : Proper class for headline -->
+        <span class="post-meta">
+                <a href="/author/zhenhui-xu">Zhenhui Xu</a>
+            | <time datetime="16 11月 2020">16 11月 2020</time>
+        </span>
+        <!-- TODO : Modified check -->
+            <div class="post-cover cover" style="background-image: url('/assets/images/duke2.jpg')">
+      </div>
+    </header>
+
+  <section id="wrapper">
+    <a class="hidden-close"></a>
+
+    <!-- Post content -->
+    <main class="content" role="main">
+        <article class="post">
+        <div class="inner">
+            <section class="post-content">
+                <p>My <strong>responsibilities</strong> in the team are</p>
+<ol>
+<li>Querying and merging raw data from google big query.</li>
+<li>Performing exploratory data analysis and developing baseline models as benchmark <em>(cooperating with Heather Qiu)</em>.</li>
+<li>Building Gradient Boosting Model and Adaptive Boosting Model and performing hyperparameter tuning.</li>
+<li>Designing dashboard overall layout, specifically the home page, the EDA page <em>(cooperating with Mengyue Han)</em>, the calendar page.</li>
+<li>Deploy the dashboard to google cloud platform.</li>
+</ol>
+<p><strong>Learning Techniques:</strong></p>
+<ol>
+<li>Serverless Cloud Platform (BigQuery, command line tool, dash deployment)</li>
+<li>Preprocessing packages: pandas, missingno</li>
+<li>Machine Learning Techniques: xgboost, optuna, sklearn</li>
+<li>Dashboard Design: dash, plotly</li>
+</ol>
+<p>Dashboard: https://bios823-mimic-dashboard.ue.r.appspot.com/</p>
+<h2>Background</h2>
+<p>After the outbreak of COVID-19, we are facing shortage of key hospital utilizations all around the world. Thus, accurate prediction on healthcare resources is or urgent need more than ever. However, care managers cannot make precise predictions on these resources manually so here's where the data mining techniques could help. </p>
+<p>The discharge location, especially those who are discharged to skilled nursing facilities and other hospitals, is an important indicator of cost of care and hospital utilizations. Thus, we will develop a model to classify and predict discharge locations and further provide information to aid care managers in allocating key healthcare utilizations.</p>
+<p>The <strong>research question</strong> is to predict discharge location at the individual level. The audience of this project is care managers and clinicians who need information to allocate key hospital resources and manage hospital capacity.</p>
+<p>The specific <strong>research aims</strong> are</p>
+<ol>
+<li>Predicting the discharge locations of each patient accurately based on electronic health records</li>
+<li>Identifying the important variables associated with the discharge locations</li>
+<li>Displaying the model development and predictions on dashboard and deploying the model on google cloud platform</li>
+</ol>
+<h2>Exploratory Data Anlysis</h2>
+<p>This section includes the querying process of raw dataset and exploratory data analysis, such as imputation of missingness and encoding of categorical variables.</p>
+<h3>Querying and Merging Raw Dataset</h3>
+<p>We extracted a total of 46,520 observations from <a href="https://mimic.physionet.org/gettingstarted/access/">MIMIC</a> database comprising of patients admitted to intensive care units from June 2001-October 2012. Only the first record of ICU stay was kept if a patient had multiple ICU stay records. The predictors comprised of  demographics data, vital signs, and laboratory test results. The following are data preprocessing steps</p>
+<ul>
+<li>Extracting the mean, max and min of the vital signs recorded by Metavision or CareVue on the first day of admission for each observation, such as heart rate, glucose and respiratory rate from table <code>INPUTEVENTS_CV</code> and <code>INPUTEVENTS_MV</code>. The definition of all items are retrieved from table <code>d_items</code>.</li>
+<li>Combining tables <code>ADMISSIONS</code>, <code>ICUSTAYS</code>, <code>PATIENTS</code> to get demographics data, such as age, admission type, religion, and ethnicity.</li>
+<li>Note: This dataset was deidentified so the age of patients older than 89-years-old was transformed to arbitrarily large numbers. Here, we reset all the age of patients older than 89 to 89 years old.</li>
+<li>Note: the admission time was also transformed to avoid data users identifying patients.</li>
+<li>Extracting the laboratory test results from the table <code>LABEVENTS</code> table on the first dat of admission for each observation, such as white blood count and blood urea nitrogen test.</li>
+</ul>
+<p><img alt="image-20201116203522270" src="./assets/images/image-20201116203522270.png"></p>
+<h3>Target Variables</h3>
+<p>This figure shows a comparison of the target variable in the raw data and processed data. We combined patients discharged to home, home health care and other locations which would consume very limited resources together and combined all other facilities, such as short term hospitals and long term hospitals, to one group which would consume a large amount of resources. </p>
+<p><div id="9b6cd7ac-5d86-4188-8149-cec6e7be290e"></div></p>
+<h3>Numerical Varibles</h3>
+<p>All the numerical variables were imputed by <strong>single imputation</strong>. We attempted to apply iterative imputation but this algorithm couldn't converge on this dataset. The variables with &gt;50% missingness were removed. This figure demonstrates the correlation between target variables and some selected numerical variables. Most of the numerical variables are not highly linearly correlated with the outcome variables.</p>
+<p><img alt="correlation" src="./assets/images/correlation.png"></p>
+<h3>Categorical Variables</h3>
+<p>We applied <strong>one-hot-encoding</strong> to the categorical variables and removed the levels with less frequent occurrences. For example, we only kept 9 diagnoses among more than 10,000 different diagnosis since most of these diagnosis were consisted of less than 1% of the sample.</p>
+<p>We used cross tables to observe the association between these variables and the target variables. For example, the patients admitted urgently are more likely to die in hospital compared to admitted electively which is consistent to our knowledge. New born are almost impossible to be discharged to skilled nursing facility.</p>
+<p><img alt="crosstab" src="./assets/images/crosstab.png"></p>
+<h2>Development of Predictive Modeling</h2>
+<p>Dummy classifier and logistic regression were applied as baseline method and four different machine learning algorithms were applied to attempt to improve predictive ability. The performance of these methods are shown in this table.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Accuracy</th>
+<th>F1 (Weighted)</th>
+<th>Recall (SNF)</th>
+<th>Recall (OTHERS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dummy Classifier</td>
+<td>0.59</td>
+<td>0.43</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Logistic Regression</td>
+<td>0.65</td>
+<td>0.59</td>
+<td>0.26</td>
+<td>0.16</td>
+</tr>
+<tr>
+<td>KNN</td>
+<td>0.60</td>
+<td>0.53</td>
+<td>0.20</td>
+<td>0.14</td>
+</tr>
+<tr>
+<td>SVM</td>
+<td>0.66</td>
+<td>0.62</td>
+<td>0.29</td>
+<td>0.22</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>0.68</td>
+<td>0.64</td>
+<td>0.30</td>
+<td>0.29</td>
+</tr>
+<tr>
+<td>Gradient Boosting</td>
+<td>0.68</td>
+<td>0.66</td>
+<td>0.34</td>
+<td>0.32</td>
+</tr>
+</tbody>
+</table>
+<p>Gradient Boosting beats all the other models based on all the evaluation metrics. The patients discharged to skilled nursing facility and other hospital facilities will consume more hospital utilizations so we focus on the predictive accuracy on these two groups. Here, let's talk about how to build a gradient boosting model by python.</p>
+<h3>Mechanisms of Gradient Boosting</h3>
+<p>The two main components of gradient boosting are decision tree ensembles and additive learning. The tree ensemble model sums the prediction of multiple trees together which complements the shortage of high variance of a single decision tree. In other words, it combines a set of weak learners to become a strong learner. The objective of gradient boosting is to minimize the loss of the model by adding weaking learners using a gradient descent procedure. Every new weak learner aims to reduce the residual loss and the previous trees remains unchanged. Since the new weak learner focuses on residual loss, it is possibly the reason it performs best on our imbalanced dataset.</p>
+<h3>Hyperparameter Tuning</h3>
+<p>The objective of hyperparameter tuning is to improve the predictive ability of our model and control overfitting problem. The two most important parameters in gradient boosting are learning rate and number of rounds. Another three different parameters can control overfitting:</p>
+<ul>
+<li>Maximum depth</li>
+<li>Minimum child weight</li>
+<li>Gamma</li>
+</ul>
+<p>First, let's try control overfitting by setting maximum depth of trees. We need to set a range for every hyperparameter. The learning rate is between 0.01-0.5 and the number of rounds is set to between 2-1000. If we set learning rate to be smaller, the numer of rounds need to be increased. Here, the objective is set to be <code>multi:softmax</code> since the target variable is a multi-level categorical variables.</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+<span class="k">class</span> <span class="nc">Objective</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trial</span><span class="p">):</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="c1"># load data once only</span>
+
+        <span class="n">learning_rate</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">colsample_bytree</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;colsample_bytree&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">n_estimators</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">max_depth</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_int</span><span class="p">(</span><span class="s1">&#39;max_depth&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">xgb</span><span class="o">.</span><span class="n">XGBClassifier</span><span class="p">(</span>
+            <span class="n">objective</span><span class="o">=</span><span class="s1">&#39;multi:softmax&#39;</span><span class="p">,</span>
+            <span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">,</span>
+            <span class="n">n_estimators</span> <span class="o">=</span> <span class="n">n_estimators</span><span class="p">,</span>
+            <span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span><span class="p">,</span>
+            <span class="n">colsample_bytree</span> <span class="o">=</span> <span class="n">colsample_bytree</span><span class="p">,</span>
+            <span class="n">random_state</span> <span class="o">=</span> <span class="mi">123</span> 
+        <span class="p">)</span>
+
+
+        <span class="n">score</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">clf</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span>  <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">score</span>
+</pre></div>
+
+
+<p>The overall accuracy of the 5-fold cross validation was the evaluation metrics in the hyperparameter tuning process. The best value of 200 rounds of trials was 0.69 which was the highest overall accuracy compared to other models. However, this model was also facing the overfitting problem. The accuracy on the training dataset was 0.85. </p>
+<p>Thus, let's try another parameter to control overfitting--gamma. Gamma is the minimum loss reduction required to make a further partition on a leaf node of the tree. The larger gamma is, the more conservative the algorithms will be. [1] In other words, the larger the gamma is, the less likely the algorithms will be overfitting.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Training Accuracy</th>
+<th>Testing Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gradient Boosting-Max Depth</td>
+<td>0.85</td>
+<td>0.69</td>
+</tr>
+<tr>
+<td>Gradient Boosting-Gamma</td>
+<td>0.77</td>
+<td>0.68</td>
+</tr>
+<tr>
+<td>Adaptive Boosting</td>
+<td>0.67</td>
+<td>0.66</td>
+</tr>
+</tbody>
+</table>
+<p>Although testing accuracy decreased 1% if we controlled overfitting by gamma, the training accuracy decreased for 8% which indicated the overfitting problem was solved to some degree. We also tried AdaBoosting but the gradient boosting beated the AdaBoosting in terms of testing accuracy.</p>
+<h2>Dashboard Design</h2>
+<p>After building the predictive model, we decided to show the overall process of development of the model and prediction of the model to a dashboard. Here, we use <a href="https://dash.plotly.com/">dash</a> package to make our dashboard.</p>
+<p><img alt="image-20201117113951829" src="./assets/images/image-20201117113951829.png"></p>
+<p>There are five parts of this dashboard:</p>
+<ul>
+<li>Home page: links to dataset, github repository and github pages</li>
+<li>EDA page: visualization of original dataset</li>
+<li>
+<p>Modelling page: comparison of different models and identification of important variables</p>
+</li>
+<li>
+<p>Calendar page: prediction results displayed to care managers</p>
+</li>
+<li>Online ML deployment: interactive prediction page</li>
+</ul>
+<h3>Multi-page Design</h3>
+<p>Based on the design of the content, the multi-page layout fits the best. The key step of multi-page dashboard is the file directory.</p>
+<div class="highlight"><pre><span></span><span class="err">-- app.py</span>
+<span class="err">--index.py</span>
+<span class="err">--apps</span>
+<span class="err">  --home.py</span>
+<span class="err">  --EDA.py</span>
+<span class="err">  --Models.py</span>
+<span class="err">  --calendar.py</span>
+<span class="err">  --deploy.py</span>
+</pre></div>
+
+
+<p>The app.py creates the server and style of the dashboard. Other files will import the <code>app</code> object from app.py. </p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dash</span>
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+
+<span class="c1"># bootstrap theme</span>
+<span class="c1"># https://bootswatch.com/lux/</span>
+<span class="n">external_stylesheets</span> <span class="o">=</span> <span class="p">[</span><span class="n">dbc</span><span class="o">.</span><span class="n">themes</span><span class="o">.</span><span class="n">LUX</span><span class="p">]</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">dash</span><span class="o">.</span><span class="n">Dash</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">external_stylesheets</span><span class="o">=</span><span class="n">external_stylesheets</span><span class="p">,</span> <span class="n">suppress_callback_exceptions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">server</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">server</span>
+</pre></div>
+
+
+<p>The index.py creates navigation bar to switch between each page and builds the path to each page. </p>
+<ul>
+<li>Import all pages in the app from apps directory</li>
+<li>Building the navigation bar</li>
+<li>Creating the dropdown menu</li>
+<li>Combining the head of navigation bar and the dropdown menu</li>
+<li>Creating the layout design</li>
+<li>Putting the navigation bar as the header</li>
+<li>Writing a call back function to switch between different pages</li>
+</ul>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
+<span class="kn">from</span> <span class="nn">dash.dependencies</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Output</span><span class="p">,</span> <span class="n">State</span>
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+<span class="kn">import</span> <span class="nn">dash</span>
+
+<span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">app</span><span class="p">,</span> <span class="n">server</span>
+<span class="c1"># import all pages in the app</span>
+<span class="kn">from</span> <span class="nn">apps</span> <span class="kn">import</span> <span class="n">home</span><span class="p">,</span> <span class="n">EDA</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">Models</span><span class="p">,</span> <span class="n">deploy_app</span>
+
+<span class="c1"># building the navigation bar</span>
+<span class="c1"># https://github.com/facultyai/dash-bootstrap-components/blob/master/examples/advanced-component-usage/Navbars.py</span>
+<span class="n">dropdown</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenu</span><span class="p">(</span>
+    <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;Home&quot;</span><span class="p">,</span>
+                             <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/haha&quot;</span>
+                             <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;EDA&quot;</span><span class="p">,</span>
+                             <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/EDA&quot;</span>
+                             <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;Models&quot;</span><span class="p">,</span>
+                             <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/Models&quot;</span>
+                             <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;Calendar&quot;</span><span class="p">,</span>
+                                    <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/calendar&quot;</span>
+                                    <span class="p">),</span>
+        <span class="n">dbc</span><span class="o">.</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="s2">&quot;Online ML&quot;</span><span class="p">,</span>
+                                    <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/deploy_app&quot;</span>
+                                    <span class="p">)</span>
+    <span class="p">],</span>
+    <span class="n">nav</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">in_navbar</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Explore&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">navbar</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Navbar</span><span class="p">(</span>
+    <span class="n">dbc</span><span class="o">.</span><span class="n">Container</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">A</span><span class="p">(</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span><span class="n">dbc</span><span class="o">.</span><span class="n">NavbarBrand</span><span class="p">(</span><span class="s2">&quot;MIMIC Predictive Modelling&quot;</span><span class="p">,</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;ml-2&quot;</span><span class="p">)),</span>
+                    <span class="p">],</span>
+                    <span class="n">align</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span>
+                    <span class="n">no_gutters</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">href</span><span class="o">=</span><span class="s2">&quot;/home&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">NavbarToggler</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;navbar-toggler2&quot;</span><span class="p">),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Collapse</span><span class="p">(</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Nav</span><span class="p">(</span>
+                    <span class="c1"># right align dropdown menu with ml-auto className</span>
+                    <span class="p">[</span><span class="n">dropdown</span><span class="p">],</span> <span class="n">className</span><span class="o">=</span><span class="s2">&quot;ml-auto&quot;</span><span class="p">,</span> <span class="n">navbar</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">),</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;navbar-collapse2&quot;</span><span class="p">,</span>
+                <span class="n">navbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;dark&quot;</span><span class="p">,</span>
+    <span class="n">dark</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mb-4&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># embedding the navigation bar</span>
+<span class="n">app</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
+    <span class="n">dcc</span><span class="o">.</span><span class="n">Location</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">refresh</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">navbar</span><span class="p">,</span>
+    <span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;page-content&#39;</span><span class="p">)</span>
+<span class="p">])</span>
+
+<span class="c1"># controlling which page to display</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">Output</span><span class="p">(</span><span class="s1">&#39;page-content&#39;</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">),</span>
+              <span class="p">[</span><span class="n">Input</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="s1">&#39;pathname&#39;</span><span class="p">)])</span>
+<span class="k">def</span> <span class="nf">display_page</span><span class="p">(</span><span class="n">pathname</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">pathname</span> <span class="o">==</span> <span class="s1">&#39;/EDA&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">EDA</span><span class="o">.</span><span class="n">layout</span>
+    <span class="k">elif</span> <span class="n">pathname</span> <span class="o">==</span> <span class="s1">&#39;/Models&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Models</span><span class="o">.</span><span class="n">layout</span>
+    <span class="k">elif</span> <span class="n">pathname</span> <span class="o">==</span> <span class="s1">&#39;/calendar&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">calendar</span><span class="o">.</span><span class="n">layout</span>
+    <span class="k">elif</span> <span class="n">pathname</span> <span class="o">==</span> <span class="s1">&#39;/deploy_app&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">deploy_app</span><span class="o">.</span><span class="n">layout</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">home</span><span class="o">.</span><span class="n">layout</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run_server</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Calendar Page</h3>
+<p>The calendar page is deigned for users who have no knowledge of machine learning algorithms. The prediction is based on the data collected at the admission stage (or the first day of admission). Care managers can see the predicted discharge locations directly in terms of time series. For example, on 2101 Januray, three patients are expected to be discharged to skilled nursing facilities.</p>
+<p><img alt="calendar" src="./assets/images/calendar.gif"></p>
+<h3>Deployment to Google Cloud Platform</h3>
+<p>Our final step is to deploy the dashboard to google cloud platform so that everyone can see the results of our model. We only need three steps before closing our project!</p>
+<h4>Step 1: Set up your Google Cloud Platform Project</h4>
+<ul>
+<li>
+<p>Install <a href="https://cloud.google.com/sdk/docs/install">GCP SDK tools</a></p>
+</li>
+<li>
+<p>Create a new project by selecting option [3] and choose the correct region</p>
+</li>
+<li>
+<p>Check if your project is active using:</p>
+</li>
+</ul>
+<p><code>bash
+  $ gcloud config get-value project
+  bios823-mimic-dashboard</code></p>
+<h4>Step 2: Set up the Project Folder</h4>
+<ul>
+<li>Ensure you import server from app.py to index.py</li>
+</ul>
+<p><code>from app import app, server</code></p>
+<ul>
+<li>Create the app.yaml file</li>
+</ul>
+<p>```
+  service: default
+  runtime: python37
+  instance_class: F4_HIGHMEM</p>
+<p>entrypoint: gunicorn -b :$PORT index:server --timeout 120
+  ```</p>
+<p>This is the most important file of the deployment of the dashboard to GCP.</p>
+<ul>
+<li>Runtime: The name of the runtime environment that is used by your app. Here, I use python 3.7 as the runtime environment.</li>
+<li>instance_class: The instance class for this service.</li>
+</ul>
+<p>Here I tell gunicorn to search for server from index.py so that's why it's important to import server in index.py. This version of gunicorn cannot understand the structure of python data, so it would not get attribute of app if you don't instantiate it.</p>
+<ul>
+<li>
+<p>Creating requirements.txt to specify the packages you need</p>
+</li>
+<li>
+<p>The first method is use pip freeze</p>
+<p><code>$ pip freeze &gt; requirements.txt</code></p>
+</li>
+<li>
+<p>Or you can write it manually.</p>
+</li>
+</ul>
+<h4>Step 3: Deploying the model to google cloud</h4>
+<ul>
+<li>Uploading and deploying all your files</li>
+</ul>
+<p><code>$ gcloud app deploy</code></p>
+<p>Note: if your get an error: Access not Configured. You just need to follow the link in the error message and enable the service.</p>
+<ul>
+<li>Viewing your dashboard</li>
+</ul>
+<p><code>$ gcloud app browse</code></p>
+<h3>References</h3>
+<ol>
+<li>https://xgboost.readthedocs.io/en/latest/</li>
+<li>https://towardsdatascience.com/beginners-guide-to-building-a-multi-page-dashboard-using-dash-5d06dbfc7599</li>
+<li>https://datasciencecampus.github.io/deploy-dash-with-gcp/</li>
+<li>https://cloud.google.com/appengine/docs/standard/python/config/appref</li>
+</ol>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+function getPlotlyJSON(div, url) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.onload = function() {
+      if (request.status >= 200 && request.status < 400) {
+        var figure = JSON.parse(request.responseText);
+        Plotly.plot(div, figure.data, figure.layout);
+      }
+    };
+    request.send();
+}
+getPlotlyJSON("9b6cd7ac-5d86-4188-8149-cec6e7be290e", "./assets/images/target.json");
+</script>
+
+            </section>
+
+            <section class="post-info">
+                <div class="post-share">
+                    <a class="twitter" href="https://twitter.com/share?text=Predicting Discharge Locations based on Machine Learning Methods and EHR data&amp;url=/2020/11/predicting-discharge-locations-based-on-machine-learning-methods-and-ehr-data.html" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <i class="ic ic-twitter"></i><span class="hidden">Twitter</span>
+                    </a>
+                    <a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=/2020/11/predicting-discharge-locations-based-on-machine-learning-methods-and-ehr-data.html" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <i class="ic ic-facebook"></i><span class="hidden">Facebook</span>
+                    </a>
+                    <a class="googleplus" href="https://plus.google.com/share?url=/2020/11/predicting-discharge-locations-based-on-machine-learning-methods-and-ehr-data.html" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <i class="ic ic-googleplus"></i><span class="hidden">Google+</span>
+                    </a>
+                    <div class="clear"></div>
+                </div>
+
+                <aside class="post-tags">
+<a href="/tag/ehr">EHR</a><a href="/tag/classification">classification</a><a href="/tag/dash">dash</a>                </aside>
+
+                <div class="clear"></div>
+
+
+                </section>
+
+
+                <aside class="post-nav">
+                    <div class="clear"></div>
+                </aside>
+
+            </div>
+        </article>
+    </main>
+      <!-- TODO : Body class -->
+    <div id="body-class" style="display: none;" class=""></div>
+
+    <footer id="footer">
+      <div class="inner">
+        <section class="credits">
+
+
+          <span class="credits-theme">Theme <a href="https://github.com/arulrajnet/attila" rel="nofollow">Attila</a></span>
+          <span class="credits-software">Published with <a href="https://github.com/getpelican/pelican" rel="nofollow">Pelican</a></span>
+        </section>
+      </div>
+    </footer>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="/theme/js/script.js"></script>
+
+    <!-- Global Site Tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-3546274-12"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-3546274-12', { 'anonymize_ip': true });
+    </script>
+<script type="text/javascript">
+    var disqus_shortname = 'attilademo';
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+</body>
+</html>
